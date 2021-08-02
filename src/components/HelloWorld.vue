@@ -1,13 +1,7 @@
 <template>
   <div
   >
-    <ul>
-      <li v-for="(coordinate, idx) in model.coordinates"
-          :key="idx"
-      >
-        {{coordinate.deviceId}}: ({{coordinate.x}}, {{coordinate.y}})
-      </li>
-    </ul>
+{{ model.pos }}
     <div class="map">
       <img
         @click="update(Msg.onTapImg($event))"
@@ -22,37 +16,65 @@
         :style="`top:${coordinate.y}px; left:${coordinate.x}px`"
         class="flag"
       >
-        <img src="/flag.jpg" />
-        <span>{{ coordinate }}</span>
+        <div
+          class="box"
+          @mouseover="update(Msg.onHoverCoordinate(idx, true))"
+          @mouseout="update(Msg.onHoverCoordinate(idx, false))"
+        >
+          <img src="/flag.jpg" class="image is-16x16 is-inline mr-1"/>
+          <span>{{ coordinate.deviceId }}</span>
+          <span class="" :class="{ 'is-hidden': coordinate.show === false }">
+            ({{ coordinate.x }}, {{ coordinate.y }})
+          </span>
+        </div>
       </div>
     </div>
 
     <div
       v-if="model.pos !== null"
-      class="modal"
+      class="modal is-active"
       >
       <div
         @click="update(Msg.cancel())"
-        class="modal-bg"
+        class="modal-background"
       >
       </div>
       <div class="modal-content">
-        <label>型番: </label>
-        <input @input="update(Msg.onInputDeviceId($event.currentTarget.value))" />
-        <label> ( </label>
-        <input :value="model.pos.x" />, <input :value="model.pos.y" />
-        <label> ) </label>
-        <div>
-          <button
-            @click="update(Msg.add())"
-          >
-            add
-          </button>
-          <button
-            @click="update(Msg.cancel())"
-          >
-            cancel
-          </button>
+        <div class="box">
+          <div class="field">
+            <div class="control">
+              <label>型番: </label>
+              <input
+                class="input is-inline is-small"
+                @input="update(Msg.onInputDeviceId($event.currentTarget.value))"
+              />
+              <label> ( </label>
+              <input
+                class="input is-inline is-small"
+                :value="model.pos.x"
+              /> ,
+              <input
+                class="input is-inline is-small"
+                :value="model.pos.y"
+              />
+              <label> ) </label>
+            </div>
+          </div>
+          <div class="buttons is-flex is-justify-content-center">
+            <button
+              @click="update(Msg.add())"
+              class="button"
+              aria-label="close"
+            >
+              add
+            </button>
+            <button
+              class="button"
+              @click="update(Msg.cancel())"
+            >
+              cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -92,40 +114,9 @@ img.background {
   width: 100%;
 }
 .flags {
-  position: absolute;
+  position: relative;
 }
 .flag {
   position: absolute;
-}
-.flag img {
-  width: 20px;
-  height: 20px;
-}
-.modal {
-  z-index: 100;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.modal-bg {
-  position: fixed;
-  background: rgba(50, 50, 50, 0.3);
-  width: 100%;
-  height: 100%;
-}
-.modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  height: 50%;
-  margin: auto;
-  background: rgba(255, 255, 255, 1);
-  border-radius: 10px;
-  border: solid 1px black;
-  padding: 20px;
 }
 </style>
