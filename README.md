@@ -1,4 +1,4 @@
-# pb-mock
+# tap-coordinates
 
 ## Project setup
 ```
