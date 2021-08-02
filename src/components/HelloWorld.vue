@@ -3,7 +3,8 @@
   >
     <ul>
       <li v-for="(coordinate, idx) in model.coordinates"
-          :key="idx">
+          :key="idx"
+      >
         {{coordinate.deviceId}}: ({{coordinate.x}}, {{coordinate.y}})
       </li>
     </ul>
@@ -11,34 +12,47 @@
       <img
         @click="update(Msg.onTapImg($event))"
         src="/bg.png"
+        class="background"
       />
+    </div>
+    <div class="flags">
       <div
-        v-if="model.pos !== null"
-        class="modal"
-        >
-        <div
-          @click="update(Msg.cancel())"
-          class="modal-bg"
-        >
-        </div>
-        <div class="modal-content">
-          <label>型番: </label>
-          <input @input="update(Msg.onInputDeviceId($event.currentTarget.value))" />
-          <label> ( </label>
-          <input :value="model.pos.x" />, <input :value="model.pos.y" />
-          <label> ) </label>
-          <div>
-            <button
-              @click="update(Msg.add())"
-            >
-              add
-            </button>
-            <button
-              @click="update(Msg.cancel())"
-            >
-              cancel
-            </button>
-          </div>
+        v-for="(coordinate, idx) in model.coordinates"
+        :key="idx"
+        :style="`top:${coordinate.y}px; left:${coordinate.x}px`"
+        class="flag"
+      >
+        <img src="/flag.jpg" />
+        <span>{{ coordinate }}</span>
+      </div>
+    </div>
+
+    <div
+      v-if="model.pos !== null"
+      class="modal"
+      >
+      <div
+        @click="update(Msg.cancel())"
+        class="modal-bg"
+      >
+      </div>
+      <div class="modal-content">
+        <label>型番: </label>
+        <input @input="update(Msg.onInputDeviceId($event.currentTarget.value))" />
+        <label> ( </label>
+        <input :value="model.pos.x" />, <input :value="model.pos.y" />
+        <label> ) </label>
+        <div>
+          <button
+            @click="update(Msg.add())"
+          >
+            add
+          </button>
+          <button
+            @click="update(Msg.cancel())"
+          >
+            cancel
+          </button>
         </div>
       </div>
     </div>
@@ -72,9 +86,20 @@ export default {
 .map {
   border: solid 1px black;
   overflow: auto;
+  position: absolute;
 }
-img {
+img.background {
   width: 100%;
+}
+.flags {
+  position: absolute;
+}
+.flag {
+  position: absolute;
+}
+.flag img {
+  width: 20px;
+  height: 20px;
 }
 .modal {
   z-index: 100;
