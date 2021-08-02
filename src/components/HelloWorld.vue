@@ -1,58 +1,106 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
+  <div
+  >
     <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
+      <li v-for="(coordinate, idx) in model.coordinates"
+          :key="idx">
+        {{coordinate.deviceId}}: ({{coordinate.x}}, {{coordinate.x}})
+      </li>
     </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <div class="map">
+      <img
+        @click="update(Msg.onTapImg($event))"
+        src="/bg.png"
+      />
+      <div
+        v-if="model.pos !== null"
+        class="modal"
+        >
+        <div
+          @click="update(Msg.cancel())"
+          class="modal-bg"
+        >
+        </div>
+        <div class="modal-content">
+          <label>型番: </label>
+          <input @input="update(Msg.onInputDeviceId($event.currentTarget.value))" />
+          <label> ( </label>
+          <input :value="model.pos.x" />, <input :value="model.pos.y" />
+          <label> ) </label>
+          <div>
+            <button
+              @click="update(Msg.add())"
+            >
+              add
+            </button>
+            <button
+              @click="update(Msg.cancel())"
+            >
+              cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+
+import {Model, Msg, update} from '../input';
+
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
+  },
+  data: () => {
+    return {
+      Msg
+    , model: Model.main('', null, [])
+    }
+  },
+  methods: {
+    update(msg) {
+      this.model = update(msg, this.model);
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.map {
+  border: solid 1px black;
+  overflow: auto;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+img {
+  width: 100%;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.modal {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
-a {
-  color: #42b983;
+.modal-bg {
+  position: fixed;
+  background: rgba(50, 50, 50, 0.3);
+  width: 100%;
+  height: 100%;
+}
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50%;
+  margin: auto;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+  border: solid 1px black;
+  padding: 20px;
 }
 </style>
