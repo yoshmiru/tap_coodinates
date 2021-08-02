@@ -4,7 +4,7 @@
     <ul>
       <li v-for="(coordinate, idx) in model.coordinates"
           :key="idx">
-        {{coordinate.deviceId}}: ({{coordinate.x}}, {{coordinate.x}})
+        {{coordinate.deviceId}}: ({{coordinate.x}}, {{coordinate.y}})
       </li>
     </ul>
     <div class="map">
